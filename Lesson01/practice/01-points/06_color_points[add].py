@@ -5,10 +5,10 @@ class Point:
     def __init__(self, x: int, y: int, color: str):
         self.x = x
         self.y = y
-        self.color = ...
+        self.color = color
 
     def dist_to(self, other_point: Point) -> float:
-        ...
+        return ((self.x - other_point.x) ** 2 + (self.y - other_point.y) ** 2) ** 0.5
 
 
 # Дан список точек нарисованных красным(red) и зеленым(green) цветами
@@ -28,6 +28,11 @@ points = [
 # TODO-3: вычислите площади треугольников образованных точками разных цветов
 
 # your core here...
+points_by_color = {
+    "green": [],
+    "blue": [],
+    "red": [],
+}
 
 print("Площадь красного треугольника = ", ...)
 print("Площадь зеленого треугольника = ", ...)

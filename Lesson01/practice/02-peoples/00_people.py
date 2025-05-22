@@ -14,5 +14,5 @@ people1 = People("Иван", "Уткин", 27)
 people2 = People("Алексей", "Перов", 35)
 
 # Выведем данные о человеке, используя метод full_name:
-
-...
+print(people1.full_name())
+print(people2.full_name())
