@@ -7,9 +7,7 @@
 она находится у вас в руке и не выпала ни орлом ни решкой. \
 Монетка "определеяется" со стороной(орел/решка), только после того, как вы ее подбрасываете(вызываете метод flip())
 
-```python
 import random
-
 
 class Coin:
     def __init__(self):
@@ -19,5 +17,26 @@ class Coin:
         """
         Подбрасывание монетки. # heads-орел/tails-решка
         """
-        self.side = ...  # random: heads/tails
-```
+        self.side = random.choice(['heads', 'tails'])
+
+number_of_coins = int(input("Введите число монеток: "))
+
+print(random.choice(['heads', 'tails']))
+
+coins = []
+for _ in range(number_of_coins):
+    coin = Coin()
+    coin.flip()
+    coins.append(coin)
+print([coin.side for coin in coins])
+
+count_of_heads = 0
+for coin in coins:
+    if coin.side == 'heads':
+        count_of_heads += 1
+
+percent_heads = round(count_of_heads * 100 / number_of_coins, 2)
+percent_tails = round((number_of_coins - count_of_heads) * 100 / number_of_coins, 2)
+
+print(f"Процент монет, выпавших орлом: {percent_heads}%")
+print(f"Процент монет, выпавших решкой: {percent_tails}%")
