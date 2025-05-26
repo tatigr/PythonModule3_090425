@@ -22,7 +22,7 @@ for value in values:
     new_card = Card(value, "Hearts")
     hearts_cards.append(new_card)
 hearts_cards_str = [card.to_str() for card in hearts_cards[::-1]]
-print(",".join(hearts_cards_str))
+print(", ".join(hearts_cards_str))
 # TODO-1: добавьте в список hearts_cards все червовые карты(от 2-ки до туза)
 
 diamonds_cards = []
@@ -31,7 +31,7 @@ for value in values:
     diamonds_cards.append(new_card)
 
 diamond_cards_str = [card.to_str() for card in diamonds_cards]
-print(",".join(diamond_cards_str))
+print(", ".join(diamond_cards_str))
 # TODO-2: добавьте в список diamonds_cards все бубновые карты(от туза до 2-ки)
 
 # TODO-3: выведите все карты из списка hearts_cards в терминал через запятую в одну строку:
