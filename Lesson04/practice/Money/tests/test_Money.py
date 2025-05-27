@@ -1,5 +1,5 @@
 import pytest
-from ... import Money
+from Money_solution import Money
 
 
 def test_create_and_show():
