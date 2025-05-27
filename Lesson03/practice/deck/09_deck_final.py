@@ -88,8 +88,8 @@ print(card2)  # -> str(card1) -> card1.__str__()
 # magic-methods - магические методы
 
 
-# for card in deck:
-#     print(card)
+for card in deck:
+    print(card)
 
 # result1 = min(deck) # 1. iter 2. > <
 # result2 = max(deck)
