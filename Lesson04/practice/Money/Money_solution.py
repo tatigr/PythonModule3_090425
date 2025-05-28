@@ -33,3 +33,15 @@ if __name__ == "__main__":
     money2 = Money(5, 60)
     money3 = money1 * 3  # money1.__mul__(3)
     print(money3)  # 9 20
+
+
+str(obj) # obj.__str__()
+iter(obj) # obj.__iter__()
+next(obj) # obj.__next__()
+len(obj)  # obj.__len__()
+
+list = []
+list.__count = 0
+
+list.append(12)
+list.__count = 1

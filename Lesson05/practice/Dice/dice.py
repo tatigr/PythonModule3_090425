@@ -1,6 +1,33 @@
+import random
+
 class Dice:
-    # Тут будет код игрального шестигранного кубика
-    pass
+    def __init__(self, sides=6):
+        # _ protected
+        # __ private
+        self.__sides = sides
+
+    def roll(self) -> int:
+        return random.randint(1, self.__sides)
+
+    # сеттер
+    def set_sides(self, new_sides):
+        if isinstance(new_sides, int) and new_sides > 0:
+            self.__sides = new_sides
+        else:
+            raise ValueError("Количество граней должно быть целым положительным числом")
+
+    # геттер
+    def get_sides(self):
+        return self.__sides
+
+
+if __name__ == "__main__":
+    dice1 = Dice()
+    dice2 = Dice(8)
+
+    print(dice2.get_sides())
+    dice2.set_sides(20)
+    print(dice2.get_sides())
 
 # TODO-1: Найти некорректные значение, которые можно записать в атрибут .side и исправьте
 
