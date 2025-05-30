@@ -5,6 +5,7 @@ class Account:
         self.phone_number = phone_number
         # self.balance = start_balance
         self.__balance = start_balance  # TODO: Закрываем прямой доступ к балансу
+        self.__history = []
 
     def full_info(self) -> str:
         """
