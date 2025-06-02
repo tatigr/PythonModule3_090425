@@ -13,19 +13,21 @@ while True:
     print(f"Игрок делает ставку: {rate_value}")
     # 1. В начале игры создаем колоду и перемешиваем ее
     deck = Deck()
-    ...
+    deck.shuffle()
     # 2. Игроку выдаем две карты
-    player_cards = ...
+    player_cards = deck.draw(2)
     # 3. Дилер берет одну карту
-    dealer_cards = ...
+    dealer_cards = deck.draw(1)
     # 4. Отображаем в консоли карты игрока и дилера
-    ...
+    print(f"{player_cards=}")
+    print(f"{dealer_cards=}")
     # 5. Проверяем нет ли у игрока блэкджека (21 очко)
     if sum_points(player_cards) == 21:
         # Выплачиваем выигрышь 3 и 2
         player_money += rate_value * 1.5
         print(f"Black Jack!!! Вы победили, ваш выигрыш {rate_value * 1.5}")
         # Заканчиваем игру
+        break
     # Если нет блэкджека, то
     while True:  # Игрок добирает карты пока не скажет "достаточно" или не сделает перебор (>21)
         player_choice = input("еще(1)/достаточно(0): ")

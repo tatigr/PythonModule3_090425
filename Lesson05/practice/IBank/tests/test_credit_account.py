@@ -32,36 +32,37 @@ def test_full_info(credit_account: CreditAccount):
 
 def test_deposit(credit_account: CreditAccount):
     assert credit_account.balance == 500
-    credit_account.deposite(400)
+    credit_account.deposit(400)
     assert credit_account.balance == 900
 
 
 def test_withdraw(credit_account: CreditAccount):
     assert credit_account.balance == 500
     credit_account.withdraw(200)
-    assert credit_account.balance == 796  # С учетом комиссии 2%
-    credit_account.withdraw(540)
-    assert credit_account.balance == 246  # Комиссию округляем вниз
+    assert credit_account.balance == 296  # С учетом комиссии 2%
+    credit_account.withdraw(200)
+    assert credit_account.balance == 92  # Комиссию округляем вниз
 
 
-def test_withdraw_limit(self):
+def test_withdraw_limit(credit_account):
     assert credit_account.balance == 500
-    self.account1.withdraw(600)
-    self.assertEqual(self.account1.balance, -112)  # С учетом комиссии в 2%
+    credit_account.withdraw(600)
+    assert credit_account.balance == -112  # С учетом комиссии в 2%
 
 
-def test_withdraw_limit_max(self):
+def test_withdraw_limit_max(credit_account):
     assert credit_account.balance == 500
-    with self.assertRaises(ValueError):
-        self.account1.withdraw(700)  # При балансе 500 и кредите 200, нельзя снять 700, т.к. есть комиссия
-
-
-def test_withdraw_inc_commission_on_negative_balance(self):
+    with pytest.raises(ValueError):
+        credit_account.withdraw(700)  # При балансе 500 и кредите 200, нельзя снять 700, т.к. есть комиссия
     assert credit_account.balance == 500
-    self.account1.withdraw(600)
-    self.assertEqual(self.account1.balance, -112)  # уходим в -баланс. Комиссия 2%, т.к. до снятия был положительный баланс
-    self.account1.withdraw(50)  # снимаем при -балансе. Комиссия 5% (2 рубля с 50)
-    self.assertEqual(self.account1.balance, -164)
+
+
+def test_withdraw_inc_commission_on_negative_balance(credit_account):
+    assert credit_account.balance == 500
+    credit_account.withdraw(600)
+    assert credit_account.balance == -112  # уходим в -баланс. Комиссия 2%, т.к. до снятия был положительный баланс
+    credit_account.withdraw(50)  # снимаем при -балансе. Комиссия 5% (2 рубля с 50)
+    assert credit_account.balance == -164
 
 
 def test_transfer(accounts: List[CreditAccount]):
