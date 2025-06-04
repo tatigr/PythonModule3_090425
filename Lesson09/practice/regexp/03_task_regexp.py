@@ -10,9 +10,9 @@ import re
 text = "Sed vestibulum laoreet a tellus; I vitae tincidunt odio euismod id. Nam!"
 
 # 1) первое слово из строки
-# template_task1 = r"^\w+\b"
-# first_word = re.match(template_task1, text)
-# print(first_word)
+template_task1 = r"^\w+\b"
+first_word = re.match(template_task1, text)
+print(first_word)
 
 # 2) первые два символа каждого слова
 template_task2 = r"\b\w{2}"
