@@ -11,8 +11,13 @@
 import re
 
 
-def parse_fraction(fraction: str):
-    fraction_pattern = r"(-?)(?:(\d+)\s+)?(\d+)/(\d+)"
+def parse_fraction(fraction: str): # 5 5/6 | 7
+    # fraction_pattern = r"(-?)(?:(\d+)\s+)?(\d+)/(\d+)"
+    if fraction.find("/") == -1:
+        whole_pattern = r"(-?)(\d+)"
+        match = re.match(whole_pattern, fraction)
+        return match.groups() + (None, None)
+    fraction_pattern = r"(-?)(?:(\d+)\s+)?(?:(\d+)/(\d+))?"
     match = re.match(fraction_pattern, fraction)
     if match:
         return match.groups()
@@ -20,7 +25,7 @@ def parse_fraction(fraction: str):
 
 
 def parse_expression(expression: str) -> tuple | None:
-    sign_pattern = r"(.+)\s+[-+]\s+(.+)"
+    sign_pattern = r"(.+)\s+([-+])\s+(.+)"
     match = re.match(sign_pattern, expression)
     if match:
         return match.groups()
@@ -29,19 +34,23 @@ def parse_expression(expression: str) -> tuple | None:
 
 if __name__ == "__main__":
     # tests parse_expression
-    assert parse_expression("5/6 + 4/7") == ("5/6", "4/7")
-    assert parse_expression("-12 5/6 - 4/7") == ("-12 5/6", "4/7")
-    assert parse_expression("12 5/7 + 4 5/17") == ("12 5/7", "4 5/17")
-    assert parse_expression("7 3/17 + -5/17") == ("7 3/17", "-5/17")
-    assert parse_expression("-5/7 - -2 5/12") == ("-5/7", "-2 5/12")
-    assert parse_expression("1/2 - 1/2") == ("1/2", "1/2")
+    assert parse_expression("5/6 + 4/7") == ("5/6", "+", "4/7")
+    assert parse_expression("-12 5/6 - 4/7") == ("-12 5/6", "-", "4/7")
+    assert parse_expression("12 5/7 + 4 5/17") == ("12 5/7", "+", "4 5/17")
+    assert parse_expression("7 3/17 + -5/17") == ("7 3/17", "+", "-5/17")
+    assert parse_expression("-5/7 - -2 5/12") == ("-5/7", "-", "-2 5/12")
+    assert parse_expression("1/2 - 1/2") == ("1/2", "-", "1/2")
     # TODO-3: доработайте функцию parse_expression, чтобы она возвращала ответ в формате
     #  ("первая дробь", "знак операции", "вторая дробь")
     # TODO-4: исправьте тесты, в соответствии с новой логикой работы функции
 
     # tests parse_fraction
     assert parse_fraction("-12 5/6") == ("-", "12", "5", "6")
+    assert parse_fraction("2 1/6") == ("", "2", "1", "6")
     assert parse_fraction("5/6") == ("", None, "5", "6")
     assert parse_fraction("-7/12") == ("-", None, "7", "12")
+    assert parse_fraction("7") == ("", "7", None, None)
+    assert parse_fraction("-5") == ("-", "5", None, None)
+    # print(parse_fraction("5/6"))
     # TODO-1: допишите тесты для функции parse_fraction, чтобы выявить недостатки работы.
     # TODO-2: Исправьте функцию.
