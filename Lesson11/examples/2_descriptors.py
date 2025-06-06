@@ -30,8 +30,8 @@ class Product:
     def __init__(self, name: str, quantity: int, price: int):
         self.name = name
         # Присвоение здесь вызовет __set__ соответствующих дескрипторов
-        self.quantity = quantity
-        self.price = price
+        self.__quantity = quantity
+        self.__price = price
 
     def __repr__(self) -> str:
         # Для удобного вывода экземпляров
@@ -43,29 +43,6 @@ class Product:
 
 
 # Демонстрация работы
-print("--- Создание экземпляра и присвоение ---")
-try:
-    p1 = Product("Banana", 20, 50)
-    print(p1)
-except (TypeError, ValueError, AttributeError) as e:
-    print(f"Ошибка при создании: {e}")
+product1 = Product("Кепка", 10, 12)
 
-print("\n--- Чтение и изменение значений ---")
-try:
-    print(f"Исходная цена: {p1.price}")  # Чтение вызывает __get__
-    p1.price = 75  # Присвоение вызывает __set__
-    print(f"Новая цена: {p1.price}")
-except (TypeError, ValueError, AttributeError) as e:
-    print(f"Ошибка при чтении/изменении: {e}")
-
-print("\n--- Попытка присвоить некорректные значения ---")
-try:
-    p1.quantity = -5  # Вызовет __set__, проверка < 0 вызовет ValueError
-except ValueError as e:
-    print(f"Ошибка при присвоении отрицательного значения: {e}")
-
-try:
-    p1.quantity = "много"  # Вызовет __set__, проверка типа вызовет TypeError
-except TypeError as e:
-    print(f"Ошибка при присвоении некорректного типа: {e}")
-
+print(product1.__dict__)

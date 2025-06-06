@@ -16,7 +16,21 @@
 # Пример использования:
 
 class TypedAttribute:
-    ... # Ваш код дескриптора
+    def __init__(self, type):
+        self._type = type
+
+    def __set_name__(self, owner, name):
+        self._private_name = f'_{name}'
+        self._public_name = name
+
+    def __get__(self, instance, owner):
+        return instance.__dict__.get(self._private_name, 0)
+
+    def __set__(self, instance, value):
+        if not isinstance(value, self._type):
+            raise TypeError(f"must be {self._type}")
+        instance.__dict__[self._private_name] = value
+
 
 class UserSettings:
     user_id = TypedAttribute(int)
@@ -24,9 +38,10 @@ class UserSettings:
     rating = TypedAttribute(float)
 
     def __init__(self, user_id, username, rating):
-        self.user_id = user_id    # Проверка типа int
+        self.user_id = user_id  # Проверка типа int
         self.username = username  # Проверка типа str
-        self.rating = rating      # Проверка типа float
+        self.rating = rating  # Проверка типа float
+
 
 # Пример работы:
 settings = UserSettings(101, "admin", 4.5)
@@ -36,7 +51,7 @@ print(settings.rating)
 
 # Попытка присвоить значение некорректного типа
 try:
-    settings.user_id = "abc" # Ожидается TypeError
+    settings.user_id = "abc"  # Ожидается TypeError
 except TypeError as e:
     print(f"Ошибка: {e}")
 

@@ -14,7 +14,24 @@
 # Пример использования:
 
 class BoundedNumber:
-     ... # Ваш код дескриптора
+    def __init__(self, start, end):
+        self._start = start
+        self._end = end
+
+    def __set_name__(self, owner, name):
+        self._private_name = f'_{name}'
+        self._public_name = name
+
+    def __get__(self, instance, owner):
+        return instance.__dict__.get(self._private_name, 0)
+
+    def __set__(self, instance, value):
+        if not isinstance(value, (int, float)):
+            raise TypeError("must be int or float")
+        if self._start <= value <= self._end:
+            instance.__dict__[self._private_name] = value
+        else:
+            raise ValueError(f"not in range [{self._start}, {self._end}]")
 
 class GameStats:
     health = BoundedNumber(0, 100) # Здоровье от 0 до 100
