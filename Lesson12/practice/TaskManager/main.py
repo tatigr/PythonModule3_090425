@@ -53,6 +53,7 @@ class TaskManager:
     def __init__(self):
         self._tasks: list[Task] = []
         self._next_task_id = 1
+        self._load_from_file()
 
     def add_task(self, title, description="", status="Pending", priority=3):
         new_task = Task(self._next_task_id, title, description, status, priority)
@@ -74,16 +75,26 @@ class TaskManager:
 
     def save_to_file(self):
         with open(self.FILE_NAME, "w", encoding="UTF-8") as file:
-            json.dump(self._convert_task_dict(), file, ensure_ascii=False, )
+            json.dump(self._convert_task_dict(), file, ensure_ascii=False)
 
-    def load_from_file(self):
-        ...
+    def _load_from_file(self):
+        self._tasks = []
+        with open(self.FILE_NAME, "r", encoding="UTF-8") as file:
+            tasks_as_dict = json.load(file)
+            for task_as_dict in tasks_as_dict:
+                task = Task(**task_as_dict)
+                self._tasks.append(task)
+                # TODO: после загрузки self._next_task_id установить в корректное значение
 
 
 if __name__ == "__main__":
     task_manager = TaskManager()
-    task_manager.add_task("Купить продукты", "Молоко, хлеб, сыр...")
-    task_manager.add_task("Проверить работу класс", "Тестирование кода")
+    # task_manager.add_task("Купить продукты", "Молоко, хлеб, сыр...")
+    # task_manager.add_task("Проверить работу класс", "Тестирование кода")
+    #
+    # task_manager.save_to_file()
+    # task_manager.add_task("Еще одна задача", "Для проверки")
+    # task_manager.view_tasks()
 
+    print("--------------------")
     task_manager.view_tasks()
-    task_manager.save_to_file()
