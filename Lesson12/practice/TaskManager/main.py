@@ -1,3 +1,10 @@
+import json
+from pathlib import Path
+
+
+# save:  task -> dict -> json  | Сериализация
+# load: json -> dict -> task   | Десериализация
+
 class Task:
     PENDING = 'Pending'
     PROCESS = 'In Progress'
@@ -8,8 +15,9 @@ class Task:
         PROCESS: 'В процессе',
         COMPLETED: 'Завершено',
     }
+
     # DRY
-    def __init__(self,id, title, description="", status="Pending", priority=3):
+    def __init__(self, id, title, description="", status="Pending", priority=3):
         self.id = id
         self.title = title
         self.description = description
@@ -20,21 +28,30 @@ class Task:
     def status(self):
         return self.__status
 
-
     @status.setter
     def status(self, new_status):
         if new_status not in self.STATUSES:
             raise ValueError("Incorrect status")
         self.__status = new_status
 
-
     def __repr__(self):
         return f"Task[{self.id}]: {self.title} status: {self.STATUSES_LOC[self.__status]}"
 
+    def to_dict(self) -> dict:
+        return {
+            "id": self.id,
+            "title": self.title,
+            "description": self.description,
+            "status": self.status,
+            "priority": self.priority,
+        }
+
 
 class TaskManager:
+    FILE_NAME = "tasks.json"
+
     def __init__(self):
-        self._tasks = []
+        self._tasks: list[Task] = []
         self._next_task_id = 1
 
     def add_task(self, title, description="", status="Pending", priority=3):
@@ -42,9 +59,25 @@ class TaskManager:
         self._next_task_id += 1
         self._tasks.append(new_task)
 
+    def get_task_by_id(self, task_id: int) -> Task | None:
+        ...
+
     def view_tasks(self) -> None:
         for task in self._tasks:
             print(task)
+
+    def _convert_task_dict(self) -> list[dict]:
+        tasks_as_dict: list[dict] = []
+        for task in self._tasks:
+            tasks_as_dict.append(task.to_dict())
+        return tasks_as_dict
+
+    def save_to_file(self):
+        with open(self.FILE_NAME, "w", encoding="UTF-8") as file:
+            json.dump(self._convert_task_dict(), file, ensure_ascii=False, )
+
+    def load_from_file(self):
+        ...
 
 
 if __name__ == "__main__":
@@ -53,4 +86,4 @@ if __name__ == "__main__":
     task_manager.add_task("Проверить работу класс", "Тестирование кода")
 
     task_manager.view_tasks()
-
+    task_manager.save_to_file()
