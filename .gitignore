@@ -2,3 +2,5 @@
 *.pyc
 *cache/
 tmp/
+
+*.db

@@ -20,17 +20,17 @@ print("\nВсе товары в базе данных:")
 for row in rows:
     print(row)  # Каждая строка - это кортеж
 
-# Пример получения товаров с ценой больше 5000
-select_filtered_sql = "SELECT ProductName, Price FROM Products WHERE Price > 5000;"
-cursor.execute(select_filtered_sql)
-filtered_products = cursor.fetchall()
-
-print("\nТовары с ценой > 5000:")
-for product in filtered_products:
-    print(f"Название: {product[0]}, Цена: {product[1]}")
-
-# Закрытие соединения
+# # Пример получения товаров с ценой больше 5000
+# select_filtered_sql = "SELECT ProductName, Price FROM Products WHERE Price > 5000;"
+# cursor.execute(select_filtered_sql)
+# filtered_products = cursor.fetchall()
+#
+# print("\nТовары с ценой > 5000:")
+# for product in filtered_products:
+#     print(f"Название: {product[0]}, Цена: {product[1]}")
+#
+# # Закрытие соединения
 cursor.close()
 conn.close()
-
-print("\nСоединение с базой данных закрыто.")
+#
+# print("\nСоединение с базой данных закрыто.")
