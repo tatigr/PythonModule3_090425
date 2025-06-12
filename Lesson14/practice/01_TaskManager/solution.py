@@ -22,7 +22,7 @@ def create_table(path_to_db):
     connect.close()
 
 
-def insert_task(path_to_db, title, description=None, status='Pending', priority=3):
+def insert_task(path_to_db, title, description=None, status=None, priority=3):
     connect = sqlite3.connect(path_to_db)
     cursor = connect.cursor()
 
@@ -49,6 +49,30 @@ def get_tasks(path_to_db, sql) -> list:
     connect.close()
     return data
 
+def update_tasks(path_to_db, sql):
+    connect = sqlite3.connect(path_to_db)
+    cursor = connect.cursor()
+
+    cursor.execute(sql)
+    connect.commit()
+
+    cursor.close()
+    connect.close()
+
+
+def delete_tasks(path_to_db, sql):
+    connect = sqlite3.connect(path_to_db)
+    cursor = connect.cursor()
+
+    cursor.execute(sql)
+
+    connect.commit()
+
+    print(f"Удалено {cursor.rowcount} задач")
+
+    cursor.close()
+    connect.close()
+
 
 if __name__ == "__main__":
     create_table('tasks.db')
@@ -70,10 +94,17 @@ if __name__ == "__main__":
     # """
 
     # Получаем задачи, в которых присутствует "код"
+    # sql = """
+    # SELECT title, priority FROM tasks
+    # WHERE title LIKE '%код%';
+    # """
+    # tasks = get_tasks('tasks.db', sql)
+    # for task in tasks:
+    #     print(task)
+
     sql = """
-    SELECT title, priority FROM tasks
-    WHERE title LIKE '%код%';
+    DELETE FROM tasks
+    WHERE description IS NULL ;
     """
-    tasks = get_tasks('tasks.db', sql)
-    for task in tasks:
-        print(task)
+
+    delete_tasks('tasks.db', sql)
