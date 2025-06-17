@@ -127,15 +127,7 @@ class TaskRepository:
 
     @classmethod
     def get_all_tasks(cls):
-        sql = f"""
-            SELECT * FROM tasks;
-            """
-        with Connect(cls.DB_FILE) as cursor:
-            cursor.execute(sql)
-            tasks_data = cursor.fetchall()
-
-        return list(map(Task._convert_data_to_task, tasks_data))
-        # return self._get_task_by_attribute('1', '1')
+        return cls._get_task_by_attribute(1, 1)
 
     @classmethod
     def delete_completed_tasks(cls) -> None:
@@ -171,7 +163,7 @@ task_repository.save(task2)  # Сохраняем новую задачу, new_t
 task_repository.save(task3)  # Сохраняем новую задачу, new_task.id будет обновлен
 task_repository.save(task4)  # Сохраняем новую задачу, new_task.id будет обновлен
 
-tasks = task_repository.get_completed_tasks()
+tasks = task_repository.get_all_tasks()
 for task in tasks:
     print(task)
 # print(f"Сохранена новая задача: {new_task}")

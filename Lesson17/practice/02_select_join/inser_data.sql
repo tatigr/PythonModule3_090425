@@ -1,3 +1,4 @@
+PRAGMA foreign_keys = ON;
 INSERT INTO Colors (name) VALUES
 ('Red'),
 ('Blue'),
