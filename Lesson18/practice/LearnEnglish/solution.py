@@ -8,7 +8,8 @@ DATABASE_NAME = 'vocabulary.db'
 def start_test():
     """Запускает режим тестирования."""
     # 1. Получаем все слова из БД
-    all_words = ...
+    all_words = database.get_all_words()
+    # TODO: слова выдаем в произвольном порядке, но избегаем повторений
 
     while True:
         # Выбираем случайное слово
@@ -30,6 +31,7 @@ def start_test():
 
 def main_menu():
     """Главное меню приложения."""
+    database.init_db()
     while True:
         print("\n--- Меню приложения 'Английский для новичков' ---")
         print("1. Добавить слово")
