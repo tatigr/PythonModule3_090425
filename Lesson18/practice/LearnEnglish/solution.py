@@ -1,14 +1,16 @@
 import sqlite3
 import random
 import database
+from helpers.connection import Connect
+from pathlib import Path
 
-DATABASE_NAME = 'vocabulary.db'
+DATABASE_NAME = Path('vocabulary.db')
 
 
-def start_test():
+def start_test(cursor):
     """Запускает режим тестирования."""
     # 1. Получаем все слова из БД
-    all_words = database.get_all_words()
+    all_words = database.get_all_words(cursor)
 
     random.shuffle(all_words)
     for english_word, correct_translation in all_words:
@@ -26,9 +28,9 @@ def start_test():
         print("-" * 20)  # Разделитель для следующего вопроса
 
 
-def main_menu():
+def main_menu(cursor: sqlite3.Cursor):
     """Главное меню приложения."""
-    database.init_db()
+    database.init_db(cursor)
     while True:
         print("\n--- Меню приложения 'Английский для новичков' ---")
         print("1. Добавить слово")
@@ -43,14 +45,14 @@ def main_menu():
         if choice == '1':
             english = input("Введите английское слово: ").strip().lower()
             russian = input("Введите русский перевод: ").strip().lower()
-            database.add_word(english, russian)
+            database.add_word(cursor, english, russian)
         elif choice == '2':
-            database.view_words()
+            database.view_words(cursor)
         elif choice == '3':
             english = input("Введите английское слово, которое хотите удалить: ").strip().lower()
-            database.delete_word(english)
+            database.delete_word(cursor, english)
         elif choice == '4':
-            start_test()
+            start_test(cursor)
         elif choice == '5':
             print("До свидания!")
             break
@@ -59,4 +61,5 @@ def main_menu():
 
 
 if __name__ == "__main__":
-    main_menu()
+    with Connect(DATABASE_NAME) as cursor:
+        main_menu(cursor)
