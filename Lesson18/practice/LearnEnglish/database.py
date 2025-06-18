@@ -6,11 +6,21 @@ from helpers.connection import Connect
 
 def init_db(cursor):
     """Инициализирует базу данных, создает таблицу words, если ее нет."""
-    sql = """
+    sql_words = """
     CREATE TABLE IF NOT EXISTS words (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     english_word TEXT NOT NULL UNIQUE,
     russian_translation TEXT NOT NULL
+    );
+    """
+    sql_answers = """
+    CREATE TABLE IF NOT EXISTS answers (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    word_id INTEGER NOT NULL,
+    date TEXT NOT NULL,
+    test_type TEXT NOT NULL DEFAULT 'english->russian',
+    result INTEGER NOT NULL,
+    FOREIGN KEY (word_id) REFERENCES words (id)
     );
     """
     cursor.execute(sql)
