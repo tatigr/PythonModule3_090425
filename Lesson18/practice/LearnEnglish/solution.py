@@ -9,12 +9,9 @@ def start_test():
     """Запускает режим тестирования."""
     # 1. Получаем все слова из БД
     all_words = database.get_all_words()
-    # TODO: слова выдаем в произвольном порядке, но избегаем повторений
 
-    while True:
-        # Выбираем случайное слово
-        english_word, correct_translation = random.choice(all_words)
-
+    random.shuffle(all_words)
+    for english_word, correct_translation in all_words:
         user_input = input(f"Как переводится '{english_word}'? (или 'стоп'/'exit' для выхода): ").strip().lower()
 
         if user_input in ('стоп', 'exit'):
