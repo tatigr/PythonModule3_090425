@@ -8,7 +8,7 @@ class Connect:
     поддерживающий использование с оператором 'with'.
     """
 
-    def __init__(self, db_name: Path):
+    def __init__(self, db_name: Path, foreign_keys=True):
         """
         Инициализирует объект Connect.
 
@@ -18,6 +18,7 @@ class Connect:
         self.db_name = db_name
         self.conn = None
         self.cursor = None
+        self.foreign_keys = foreign_keys
 
     def __enter__(self) -> sqlite3.Cursor:
         """
@@ -30,6 +31,8 @@ class Connect:
         try:
             self.conn = sqlite3.connect(self.db_name)
             self.cursor = self.conn.cursor()
+            if self.foreign_keys:
+                self.cursor.execute("PRAGMA foreign_keys = ON;")
             return self.cursor
         except sqlite3.Error as e:
             print(f"Ошибка при подключении к базе данных: {e}")

@@ -13,16 +13,17 @@ def init_db(cursor):
         russian_translation TEXT NOT NULL
     );
     """
-    # sql_answers = """
-    # CREATE TABLE IF NOT EXISTS answers (
-    #     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    #     word_id INTEGER NOT NULL,
-    #     timestamp TEXT NOT NULL,
-    #     is_correct INTEGER NOT NULL,
-    #     FOREIGN KEY (word_id) REFERENCES words(id)
-    # );
-    # """
+    sql_answers = """
+    CREATE TABLE IF NOT EXISTS answers(
+        id         INTEGER PRIMARY KEY AUTOINCREMENT,
+        word_id    INTEGER NOT NULL,
+        timestamp  TEXT    NOT NULL,
+        is_correct INTEGER NOT NULL,
+        FOREIGN KEY (word_id) REFERENCES words (id) ON DELETE CASCADE
+    );
+    """
     cursor.execute(sql)
+    cursor.execute(sql_answers)
 
 
 def add_word(cursor, english_word: str, russian_translation: str) -> None:
@@ -31,12 +32,14 @@ def add_word(cursor, english_word: str, russian_translation: str) -> None:
     INSERT INTO words (english_word, russian_translation)
     VALUES (?, ?)
     """
+    if not english_word or not russian_translation:
+        raise ValueError("Слово или перевод не должны быть пустыми")
     cursor.execute(sql, (english_word, russian_translation))
 
 
 def get_all_words(cursor) -> list[tuple]:
     sql = """
-        SELECT english_word, russian_translation FROM words
+        SELECT id, english_word, russian_translation FROM words
         """
     cursor.execute(sql)
     words_data = cursor.fetchall()
@@ -76,3 +79,49 @@ def get_table_info(cursor: sqlite3.Cursor, table_name: str):
     """Вспомогательная функция для получения информации о таблице (для тестов)."""
     cursor.execute(f"PRAGMA table_info({table_name})")
     return cursor.fetchall()
+
+
+def record_answer(cursor: sqlite3.Cursor, word_id: int, timestamp: str, is_correct: int) -> None:
+    sql = """
+    INSERT INTO answers (word_id, timestamp, is_correct)
+    VALUES (?, ?, ?);
+    """
+    cursor.execute(sql, (word_id, timestamp, is_correct))
+
+
+def get_words_stats(cursor: sqlite3.Cursor) -> list[dict]:
+    sql = """
+    SELECT 
+       words.id,
+       words.english_word,
+       words.russian_translation,
+       COUNT(answers.id)                                       AS total_questions,
+       SUM(CASE WHEN answers.is_correct = 1 THEN 1 ELSE 0 END) AS correct_answers,
+       SUM(CASE WHEN answers.is_correct = 0 THEN 1 ELSE 0 END) AS incorrect_answers
+    FROM words
+         JOIN answers ON words.id = answers.word_id
+    GROUP BY words.id;
+    """
+    # word = {
+    #     "english_word": ...,
+    #     "total_questions": ...,
+    #     "correct_answers": ...,
+    #     "incorrect_answers": ...,
+    # }
+    words: list[dict] = []
+    keys = ["word_id", "english_word", "russian_translation", "total_questions", "correct_answers", "incorrect_answers"]
+    cursor.execute(sql)
+    words_data: list[tuple] = cursor.fetchall()
+
+    for word_data in words_data:
+        word: dict = dict(zip(keys, word_data))
+        word["incorrect_percent"] = word["incorrect_answers"] / word["total_questions"]
+        words.append(word)
+
+    return words
+
+
+if __name__ == "__main__":
+    with Connect(Path('vocabulary.db')) as cursor:
+        result = get_words_stats(cursor)
+        print(result)

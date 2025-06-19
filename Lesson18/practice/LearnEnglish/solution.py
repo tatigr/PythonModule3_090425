@@ -3,6 +3,7 @@ import random
 import database
 from helpers.connection import Connect
 from pathlib import Path
+from datetime import datetime
 
 DATABASE_NAME = Path('vocabulary.db')
 
@@ -10,22 +11,32 @@ DATABASE_NAME = Path('vocabulary.db')
 def start_test(cursor):
     """Запускает режим тестирования."""
     # 1. Получаем все слова из БД
-    all_words = database.get_all_words(cursor)
+    all_words = database.get_words_stats(cursor)
 
-    random.shuffle(all_words)
-    for english_word, correct_translation in all_words:
+    # random.shuffle(all_words)
+    all_words.sort(key=lambda word: word["incorrect_percent"], reverse=True)
+    for word in all_words:
+        word_id = word["word_id"]
+        english_word = word["english_word"]
+        correct_translation = word["russian_translation"]
+
         user_input = input(f"Как переводится '{english_word}'? (или 'стоп'/'exit' для выхода): ").strip().lower()
 
         if user_input in ('стоп', 'exit'):
             print("Тест завершен.")
             break
 
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
         if user_input == correct_translation:
             print("Верно!")
+            database.record_answer(cursor, word_id, timestamp, 1)
         else:
             print(f"Неправильно. Правильный перевод: '{correct_translation}'.")
+            database.record_answer(cursor, word_id, timestamp, 0)
 
         print("-" * 20)  # Разделитель для следующего вопроса
+    # TODO: добавить статистику по текущей сессии тестирования
 
 
 def main_menu(cursor: sqlite3.Cursor):

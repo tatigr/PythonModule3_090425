@@ -51,7 +51,7 @@ def test_get_words_single_word(in_memory_cursor, capsys):
     add_word(in_memory_cursor, "cat", "кошка")
     words = get_all_words(in_memory_cursor)
 
-    assert words == [("cat", "кошка")], "Функция должна вернуть список с одним словом."
+    assert words == [(1, "cat", "кошка")], "Функция должна вернуть список с одним словом."
 
 
 def test_get_words_multiple_words(in_memory_cursor, capsys):
@@ -65,9 +65,9 @@ def test_get_words_multiple_words(in_memory_cursor, capsys):
     words = get_all_words(in_memory_cursor)
 
     expected_words = [
-        ("zebra", "зебра"),
-        ("apple", "яблоко"),
-        ("dog", "собака")
+        (1, "zebra", "зебра"),
+        (2, "apple", "яблоко"),
+        (3, "dog", "собака")
     ]
 
     assert words == expected_words, "Функция должна вернуть список со всеми добавленными словами."
