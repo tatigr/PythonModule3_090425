@@ -1,4 +1,4 @@
-INSERT INTO words (english_word, russian_word)
+INSERT INTO words (english_word, russian_translation)
 VALUES ('hello', 'привет'),
        ('world', 'мир'),
        ('apple', 'яблоко'),
